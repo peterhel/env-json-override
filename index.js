@@ -7,6 +7,7 @@ if(! require.main) {
 const path = require('path');
 
 const dirname = path.dirname(require.main.filename);
+let _config = null;
 
 function print(parentKey, o) {
   for(var key in o) {
@@ -25,10 +26,8 @@ function print(parentKey, o) {
   }
 }
 
-module.exports = function overrideJSON(filename) {
+function overrideJSON(filename) {
   const caller = module.parent.filename;
-
-  console.log(caller);
 
   const dirname = path.dirname(caller);
   const fullpath = path.resolve(dirname, filename);
@@ -37,4 +36,8 @@ module.exports = function overrideJSON(filename) {
   print(null, config);
 
   return config;
-};
+}
+
+module.exports = filename => {
+  return _config || (_config = overrideJSON(filename));
+}
