@@ -1,10 +1,12 @@
 'use strict';
 
+var debug = require('debug')('env-json-override');
+var path = require('path');
+
 if(! require.main) {
   throw new Error('This module must be required from a module.');
 }
 
-const path = require('path');
 
 const dirname = path.dirname(require.main.filename);
 let _config = null;
@@ -17,9 +19,9 @@ function print(parentKey, o) {
       print(currentKey, current);
     } else {
       let envVar = currentKey.toUpperCase()
-      console.log(`Checking for environment variable ${envVar}`);
+      debug(`Checking for environment variable ${envVar}`);
       if(process.env[envVar]) {
-        console.log(` -> Overriding value`);
+        debug(`Overriding value for ${envVar}`);
         o[key] = process.env[envVar];
       }
     }
@@ -27,10 +29,10 @@ function print(parentKey, o) {
 }
 
 function overrideJSON(filename) {
-  const caller = module.parent.filename;
+  const fullpath = filename;
 
-  const dirname = path.dirname(caller);
-  const fullpath = path.resolve(dirname, filename);
+  debug('fullpath', fullpath);
+
   const config = require(fullpath);
 
   print(null, config);
@@ -38,6 +40,6 @@ function overrideJSON(filename) {
   return config;
 }
 
-module.exports = filename => {
-  return _config || (_config = overrideJSON(filename));
+module.exports = (filename, root) => {
+  return overrideJSON(path.resolve(root, filename));
 }

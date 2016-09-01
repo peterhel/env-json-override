@@ -1,2 +1,1 @@
-var jsor = require('../../index');
-jsor('../testconf.json')
+require('../../index')('../testconf.json', __dirname);
