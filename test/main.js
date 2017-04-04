@@ -3,7 +3,8 @@ it('can require a config file', () => {
 });
 
 it('can require a config file', () => {
-	require('../index')('./testconf.json', __dirname);
+	const config = require('../index')('./testconf.json', __dirname);
+	console.log(config)
 });
 
 

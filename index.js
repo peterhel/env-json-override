@@ -7,7 +7,6 @@ if(! require.main) {
   throw new Error('This module must be required from a module.');
 }
 
-
 const dirname = path.dirname(require.main.filename);
 let _config = null;
 
@@ -20,7 +19,7 @@ function print(parentKey, o) {
     } else {
       let envVar = currentKey.toUpperCase()
       debug(`Checking for environment variable ${envVar}`);
-      if(process.env[envVar]) {
+      if(typeof(process.env[envVar]) === 'string') {
         debug(`Overriding value for ${envVar}`);
         o[key] = process.env[envVar];
       }
